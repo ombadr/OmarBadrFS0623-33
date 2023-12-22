@@ -9,7 +9,6 @@ import { Component } from 'react';
 import { Spinner } from 'react-bootstrap';
 import SearchResults from './components/SearchResults';
 
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -75,10 +74,6 @@ class App extends Component {
 
   render() {
 
-
-
-    console.log('Is Loading: ', this.state.isLoading)
-
     return (
       <div className="App">
         <MyNavbar onSearch={this.handleSearch} />
@@ -109,9 +104,6 @@ class App extends Component {
         {
           !this.state.hasSearched ? (
             <>
-
-
-
               < div className='mt-3'>
                 <h3 className='text-start mx-3 text-white'>Trending Now</h3>
 
@@ -123,7 +115,6 @@ class App extends Component {
 
               </div>
 
-
               <div className='mt-3'>
                 <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
                 {
@@ -132,7 +123,6 @@ class App extends Component {
                   </div>) : (<MyMovieGallery movies={this.state.movieGallery2} />)
                 }
               </div>
-
 
               <div className='mt-3'>
                 <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
@@ -149,21 +139,17 @@ class App extends Component {
 
             < div className='mt-3' >
               <h3 className='text-start mx-3 text-white'>Search Results</h3>
-
               {
                 this.state.isLoading ? (<div className="text-center my-5">
                   <Spinner animation="border" variant="light" />
                 </div>) : (<SearchResults movies={this.state.searchMovies} />)
               }
-
             </div >
           )
         }
 
         {/* FOOTER */}
-
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-
           <MyFooter />
         </div>
 

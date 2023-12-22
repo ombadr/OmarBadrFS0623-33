@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import AddComment from './AddComment';
 import CommentList from './CommentList';
 

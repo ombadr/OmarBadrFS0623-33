@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Container,
-  Row,
-  Col,
-  ListGroup,
-  Spinner,
-  Button,
-  Alert,
-} from 'react-bootstrap';
+import { Container, Row, Col, ListGroup, Button } from 'react-bootstrap';
 class CommentList extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +27,6 @@ class CommentList extends React.Component {
         }
       })
       .then((data) => {
-        console.log('Commenti: ', data);
         this.setState({ comments: data });
       })
       .catch((err) => {
@@ -62,6 +53,37 @@ class CommentList extends React.Component {
                     <p className='mb-0'>Comment: {comment.comment}</p>
                     <p className='mb-0'>Rate: {comment.rate}</p>
                     <p className='mb-0'>Author: {comment.author}</p>
+                    <Button
+                      className='btn btn-danger py-1 px-2'
+                      onClick={() => {
+                        fetch(
+                          'https://striveschool-api.herokuapp.com/api/comments/' +
+                            comment._id,
+                          {
+                            method: 'DELETE',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              Authorization:
+                                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxZjAyODBkOGEyMDAwMThhNDhiMmYiLCJpYXQiOjE3MDMxNjA3MTAsImV4cCI6MTcwNDM3MDMxMH0.BtXNd6xIEcoxpQ6JWiLh8hmtaKgbDZi8RkyAJUi98Jw',
+                            },
+                          }
+                        )
+                          .then((res) => {
+                            if (res.ok) {
+                              this.getComments(this.props.movieId);
+                            } else {
+                              throw new Error(
+                                'Eliminazione del commento non riuscito'
+                              );
+                            }
+                          })
+                          .catch((err) => {
+                            console.log('Error: ', err);
+                          });
+                      }}
+                    >
+                      DELETE
+                    </Button>
                   </div>
                 ))}
               </ListGroup>

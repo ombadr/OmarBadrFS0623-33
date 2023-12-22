@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Container, Form, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Container, Form, Button } from 'react-bootstrap';
 
 class AddComment extends React.Component {
   constructor(props) {
