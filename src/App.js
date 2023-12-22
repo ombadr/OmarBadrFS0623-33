@@ -6,8 +6,8 @@ import MyNavbar from './components/MyNavbar';
 import MyMovieGallery from './components/MyMovieGallery';
 import MyFooter from './components/MyFooter';
 import { Component } from 'react';
+import { Spinner } from 'react-bootstrap';
 import SearchResults from './components/SearchResults';
-import { toHaveAccessibleDescription } from '@testing-library/jest-dom/matchers';
 
 
 class App extends Component {
@@ -19,7 +19,8 @@ class App extends Component {
       movieGallery3: [],
       searchValue: '',
       searchMovies: [],
-      hasSearched: false
+      hasSearched: false,
+      isLoading: true
     }
     this.handleSearch = this.handleSearch.bind(this)
     this.getMovies = this.getMovies.bind(this)
@@ -30,7 +31,7 @@ class App extends Component {
 
 
   handleSearch(value) {
-    this.setState({ searchValue: value, hasSearched: true }, () => {
+    this.setState({ searchValue: value, hasSearched: true, isLoading: true }, () => {
       console.log('Updated search value: ', this.state.searchValue);
       this.getSearchMovies();
     });
@@ -41,6 +42,7 @@ class App extends Component {
 
     searchQueries.forEach((query, i) => {
       fetch(`${this.BASE_URL}&s=${query}`).then(res => res.json()).then(data => {
+        this.setState({ isLoading: false })
         if (i === 0) {
           this.setState({ movieGallery1: data.Search });
         } else if (i === 1) {
@@ -49,7 +51,10 @@ class App extends Component {
           this.setState({ movieGallery3: data.Search });
         }
       })
-        .catch(err => console.log('Error: ', err))
+        .catch(err => {
+          this.setState({ isLoading: false })
+          console.log('Error: ', err)
+        })
     })
 
   }
@@ -59,7 +64,7 @@ class App extends Component {
 
     fetch(`${this.BASE_URL}&s=${searchValue}`)
       .then(res => res.json())
-      .then(data => this.setState({ searchMovies: data.Search }))
+      .then(data => this.setState({ searchMovies: data.Search, isLoading: false }))
       .catch(err => console.log('Error: ', err))
   }
 
@@ -69,6 +74,11 @@ class App extends Component {
   }
 
   render() {
+
+
+
+    console.log('Is Loading: ', this.state.isLoading)
+
     return (
       <div className="App">
         <MyNavbar onSearch={this.handleSearch} />
@@ -99,21 +109,39 @@ class App extends Component {
         {
           !this.state.hasSearched ? (
             <>
+
+
+
               < div className='mt-3'>
                 <h3 className='text-start mx-3 text-white'>Trending Now</h3>
-                <MyMovieGallery movies={this.state.movieGallery1} />
+
+                {
+                  this.state.isLoading ? (<div className="text-center my-5">
+                    <Spinner animation="border" variant="light" />
+                  </div>) : (<MyMovieGallery movies={this.state.movieGallery1} />)
+                }
+
               </div>
 
 
               <div className='mt-3'>
                 <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
-                <MyMovieGallery movies={this.state.movieGallery2} />
+                {
+                  this.state.isLoading ? (<div className="text-center my-5">
+                    <Spinner animation="border" variant="light" />
+                  </div>) : (<MyMovieGallery movies={this.state.movieGallery2} />)
+                }
               </div>
 
 
               <div className='mt-3'>
                 <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
-                <MyMovieGallery movies={this.state.movieGallery3} />
+                {
+                  this.state.isLoading ? (<div className="text-center my-5">
+                    <Spinner animation="border" variant="light" />
+                  </div>) : (<MyMovieGallery movies={this.state.movieGallery3} />)
+                }
+
               </div>
             </>
 
@@ -121,16 +149,16 @@ class App extends Component {
 
             < div className='mt-3' >
               <h3 className='text-start mx-3 text-white'>Search Results</h3>
-              <SearchResults movies={this.state.searchMovies} />
+
+              {
+                this.state.isLoading ? (<div className="text-center my-5">
+                  <Spinner animation="border" variant="light" />
+                </div>) : (<SearchResults movies={this.state.searchMovies} />)
+              }
+
             </div >
           )
         }
-
-
-
-
-
-
 
         {/* FOOTER */}
 

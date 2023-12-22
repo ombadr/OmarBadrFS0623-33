@@ -31,7 +31,7 @@ class MyNavbar extends React.Component {
     return (
       <Navbar expand='xl' variant='dark'>
         <Container fluid>
-          <Navbar.Brand href='#home'>
+          <Navbar.Brand href='/'>
             <img
               src='assets/imgs/logo.png'
               alt='Netflix logo'
@@ -41,7 +41,7 @@ class MyNavbar extends React.Component {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='me-auto fw-bold'>
-              <Nav.Link href='#home'>Home</Nav.Link>
+              <Nav.Link href='/'>Home</Nav.Link>
               <Nav.Link href='#link' className='text-white'>
                 TV Shows
               </Nav.Link>
