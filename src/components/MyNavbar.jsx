@@ -9,6 +9,22 @@ import FormControl from 'react-bootstrap/FormControl';
 class MyNavbar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      searchInput: '',
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  handleInputChange(e) {
+    this.setState({ searchInput: e.target.value });
+  }
+
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      this.props.onSearch(this.state.searchInput);
+    }
   }
 
   render() {
@@ -37,9 +53,11 @@ class MyNavbar extends React.Component {
             <div className='d-flex align-items-center'>
               <InputGroup className='icons'>
                 <FormControl
-                  placeholder='Search and press enter'
+                  placeholder='Search...'
                   aria-label='search'
-                  aria-describedby='basic-addon1'
+                  value={this.state.searchInput}
+                  onChange={this.handleInputChange}
+                  onKeyDown={this.handleKeyPress}
                 />
               </InputGroup>
               <p className='mb-0 mx-2 text-white p-2'>KIDS</p>

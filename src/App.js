@@ -6,6 +6,8 @@ import MyNavbar from './components/MyNavbar';
 import MyMovieGallery from './components/MyMovieGallery';
 import MyFooter from './components/MyFooter';
 import { Component } from 'react';
+import SearchResults from './components/SearchResults';
+import { toHaveAccessibleDescription } from '@testing-library/jest-dom/matchers';
 
 
 class App extends Component {
@@ -15,13 +17,24 @@ class App extends Component {
       movieGallery1: [],
       movieGallery2: [],
       movieGallery3: [],
+      searchValue: '',
+      searchMovies: [],
+      hasSearched: false
     }
+    this.handleSearch = this.handleSearch.bind(this)
     this.getMovies = this.getMovies.bind(this)
+    this.getSearchMovies = this.getSearchMovies.bind(this)
   }
 
   BASE_URL = 'http://www.omdbapi.com/?apikey=dbd9d8ad'
 
 
+  handleSearch(value) {
+    this.setState({ searchValue: value, hasSearched: true }, () => {
+      console.log('Updated search value: ', this.state.searchValue);
+      this.getSearchMovies();
+    });
+  }
   getMovies() {
 
     const searchQueries = ['spider', 'batman', 'godfather']
@@ -41,6 +54,15 @@ class App extends Component {
 
   }
 
+  getSearchMovies() {
+    const searchValue = encodeURIComponent(this.state.searchValue)
+
+    fetch(`${this.BASE_URL}&s=${searchValue}`)
+      .then(res => res.json())
+      .then(data => this.setState({ searchMovies: data.Search }))
+      .catch(err => console.log('Error: ', err))
+  }
+
 
   componentDidMount() {
     this.getMovies()
@@ -49,7 +71,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <MyNavbar />
+        <MyNavbar onSearch={this.handleSearch} />
         <div className='d-flex justify-content-between text-white'>
           <div className='d-flex align-items-center'>
             <h1 className='mx-3'>TV Shows</h1>
@@ -74,23 +96,39 @@ class App extends Component {
           </div>
         </div>
 
-        {/* TRENDING NOW MOVIE GALLERY */}
-        <div className='mt-3'>
-          <h3 className='text-start mx-3 text-white'>Trending Now</h3>
-          <MyMovieGallery movies={this.state.movieGallery1} />
-        </div>
+        {
+          !this.state.hasSearched ? (
+            <>
+              < div className='mt-3'>
+                <h3 className='text-start mx-3 text-white'>Trending Now</h3>
+                <MyMovieGallery movies={this.state.movieGallery1} />
+              </div>
 
-        {/* WATCH IT AGAIN MOVIE GALLERY */}
-        <div className='mt-3'>
-          <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
-          <MyMovieGallery movies={this.state.movieGallery2} />
-        </div>
 
-        {/* NEW RELEASES MOVIE GALLERY */}
-        <div className='mt-3'>
-          <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
-          <MyMovieGallery movies={this.state.movieGallery3} />
-        </div>
+              <div className='mt-3'>
+                <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
+                <MyMovieGallery movies={this.state.movieGallery2} />
+              </div>
+
+
+              <div className='mt-3'>
+                <h3 className='text-start mx-3 text-white'>Watch It Again</h3>
+                <MyMovieGallery movies={this.state.movieGallery3} />
+              </div>
+            </>
+
+          ) : (
+
+            < div className='mt-3' >
+              <h3 className='text-start mx-3 text-white'>Search Results</h3>
+              <SearchResults movies={this.state.searchMovies} />
+            </div >
+          )
+        }
+
+
+
+
 
 
 

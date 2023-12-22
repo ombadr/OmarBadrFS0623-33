@@ -59,7 +59,6 @@ class AddComment extends React.Component {
   }
 
   render() {
-    const { movieId } = this.props;
     return (
       <Container>
         <Row>
